@@ -1,0 +1,19 @@
+CITY OF BOSTON — ENVIRONMENTAL QUALITY REPORT, Q3 2025
+
+AIR QUALITY SUMMARY
+Boston's Air Quality Index (AQI) averaged 42 (Good) during Q3 2025, a 7% improvement over Q3 2024. However, 12 days exceeded the "Moderate" threshold (AQI > 100), concentrated in July during a prolonged heat wave. The Roxbury monitoring station recorded the highest particulate matter (PM2.5) levels in the city, averaging 15.3 µg/m³ — 28% above the citywide average and disproportionately affecting environmental justice communities. East Boston registered elevated NO2 levels near the airport corridor, averaging 22 ppb compared to the citywide average of 14 ppb.
+
+URBAN HEAT ISLAND EFFECT
+Surface temperature mapping revealed that neighborhoods with less than 15% tree canopy cover experienced peak temperatures 8-12°F higher than areas with 30%+ canopy coverage. The most affected areas include: Dorchester (avg canopy 11%), Mattapan (avg canopy 13%), and parts of East Boston (avg canopy 9%). The city's goal of 35% canopy coverage by 2035 would require planting approximately 120,000 new trees across these neighborhoods.
+
+WATER QUALITY
+Boston Harbor water quality met EPA standards on 94% of testing days, up from 89% in 2024. However, combined sewer overflow (CSO) events increased by 15% due to three major storm events in August. CSO discharge points near Dorchester Bay and the Charles River showed elevated E. coli levels (>235 CFU/100mL) for 2-4 days following each event. The Deer Island Treatment Plant processed an average of 370 million gallons per day, with peak flows of 1.2 billion gallons during storm events.
+
+WASTE & RECYCLING
+Residential recycling contamination rates remain high at 28%, primarily due to plastic bag contamination and food-soiled materials. The city diverted 24% of waste from landfills through recycling and composting programs. Mattapan and Hyde Park had the lowest recycling participation rates (18% and 21% respectively), correlating with areas that have the fewest curbside pickup days. A new food waste composting pilot in Jamaica Plain achieved 45% household participation in its first quarter.
+
+CLIMATE RESILIENCE
+Sea level rise projections indicate 1.5 feet of rise by 2050, putting an estimated $80 billion in property at risk in East Boston, the Seaport District, and Dorchester waterfront. The city completed 3 of 12 planned coastal resilience projects, including the East Boston waterfront park redesign incorporating living shoreline elements. The Resilient Boston Harbor plan calls for 47 miles of adapted shoreline, with 8% completed to date.
+
+ENVIRONMENTAL JUSTICE METRICS
+Communities designated as Environmental Justice (EJ) populations experienced: 35% more days with poor air quality, 2.4x higher rates of childhood asthma hospitalization, 40% less access to green space per capita, and 3.1x higher likelihood of living within 0.5 miles of a contaminated site. The city allocated $12 million in FY2025 for targeted environmental improvements in EJ communities, representing a 60% increase over FY2024.

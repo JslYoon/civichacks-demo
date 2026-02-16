@@ -1,0 +1,50 @@
+BOSTON PUBLIC SCHOOLS — EDUCATIONAL EQUITY REPORT, 2024-2025
+
+ENROLLMENT & DEMOGRAPHICS
+Boston Public Schools (BPS) enrolled 49,152 students across 125 schools in SY2024-25. Demographics: Hispanic/Latino 43.8%, Black 29.1%, White 14.2%, Asian 8.9%, Multiracial 3.2%, Other 0.8%. Students from low-income families: 62%. English Language Learners (ELL): 32.4% (representing 78 home languages). Students with disabilities receiving special education services: 21.7%. Students experiencing homelessness: 4.8% (2,359 students).
+
+ACHIEVEMENT GAPS
+MCAS proficiency rates reveal persistent gaps across demographic groups:
+
+Mathematics (Grade 8):
+- Overall proficiency: 28%
+- White students: 52%
+- Asian students: 58%
+- Black students: 14%
+- Hispanic/Latino students: 16%
+- Low-income students: 17%
+- Non-low-income students: 51%
+- ELL students: 8%
+- Students with disabilities: 6%
+
+English Language Arts (Grade 8):
+- Overall proficiency: 37%
+- White students: 63%
+- Asian students: 55%
+- Black students: 22%
+- Hispanic/Latino students: 24%
+- Low-income students: 25%
+- Non-low-income students: 59%
+- ELL students: 5%
+- Students with disabilities: 9%
+
+The achievement gap between White and Black students in math (38 percentage points) has not narrowed in the past 5 years. The gap between ELL and non-ELL students widened by 3 percentage points since 2022.
+
+CHRONIC ABSENTEEISM
+District-wide chronic absenteeism rate (missing 10%+ of school days): 38.2%, up from 33% pre-pandemic. Rates by demographic: Black students 44%, Hispanic/Latino 41%, White 28%, Asian 22%. Students experiencing homelessness: 62%. High schools had the highest rates (47.3%), with five schools exceeding 55%. The strongest predictor of chronic absenteeism was transportation — students with commutes over 45 minutes were 2.3x more likely to be chronically absent.
+
+TECHNOLOGY ACCESS
+BPS achieved 1:1 device ratio (one Chromebook per student) in 2023. However: 18% of families reported unreliable home internet access. 7% had no home internet. The district's partnership with Comcast Internet Essentials enrolled 8,200 families, but 3,400 eligible families remained unconnected. Digital literacy assessments showed 34% of 6th graders could not independently navigate educational software. Teacher technology proficiency varied widely — 45% of teachers reported feeling "unprepared" to integrate AI tools into instruction.
+
+STAFFING
+Teacher vacancies at start of SY2024-25: 127 positions (5.2% vacancy rate). Highest vacancy areas: Special Education (42 vacancies), Math (28), Science (22), Bilingual Education (19). Teacher demographic mismatch: 64% of students are Black or Hispanic/Latino, while 39% of teachers identify as people of color. Schools in Roxbury and Mattapan had the highest staff turnover rates (28% and 25% respectively). Average teacher salary: $78,400. Starting salary: $54,200.
+
+COLLEGE & CAREER READINESS
+Four-year graduation rate: 75.2% (up from 73.8%). Five-year rate: 80.1%. Dropout rate: 5.8%. College enrollment within 12 months of graduation: 58%. Persistence rate (enrolled in college after 2 years): 41%. Students who completed FAFSA: 52%. Students with access to at least one AP course at their school: 78%, but actual AP enrollment: 22%. AP exam pass rates: White students 72%, Asian students 68%, Black students 31%, Hispanic/Latino students 34%.
+
+RECOMMENDATIONS FROM THE SUPERINTENDENT
+1. Implement targeted tutoring programs for ELL students in mathematics
+2. Expand transportation options to reduce commute-related absenteeism
+3. Deploy AI-assisted personalized learning platforms in 20 pilot schools
+4. Increase bilingual teacher recruitment pipeline by 50%
+5. Close the digital divide through expanded broadband access partnerships

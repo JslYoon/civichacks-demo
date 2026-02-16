@@ -1,0 +1,30 @@
+CITY OF BOSTON — 311 SERVICE REQUEST ANALYSIS, 2025
+
+OVERVIEW
+Boston's 311 system processed 487,293 service requests in 2025, a 12% increase over 2024. The average resolution time was 8.4 days, up from 7.1 days the previous year. Customer satisfaction ratings averaged 3.2 out of 5 stars, down from 3.5 in 2024. The system handled requests through phone (38%), mobile app (34%), web portal (22%), and Twitter/social media (6%).
+
+TOP REQUEST CATEGORIES (by volume)
+1. Street Cleaning & Litter (67,421 requests) — Avg resolution: 3.2 days. Dorchester, Roxbury, and Allston-Brighton accounted for 45% of all requests. Peak months: April-June (post-winter cleanup).
+2. Pothole Repair (52,388 requests) — Avg resolution: 11.7 days. Significant backlog in February-March. West Roxbury and Roslindale had highest per-capita rates. 23% of requests were duplicates for the same pothole.
+3. Code Enforcement (48,102 requests) — Avg resolution: 22.3 days. Categories include trash violations, building code issues, and noise complaints. Student move-in/move-out periods (September 1, May 31) saw 400% spikes in Allston-Brighton.
+4. Street Light Outages (41,756 requests) — Avg resolution: 14.8 days. Mattapan and Dorchester had the longest average resolution times (21+ days). 15% of requests were repeat reports for the same fixture.
+5. Tree Maintenance (38,291 requests) — Avg resolution: 45.2 days. Longest resolution category. Emergency requests (fallen trees) resolved in 2.1 days avg, but routine pruning backlog exceeded 6 months.
+
+GEOGRAPHIC DISPARITIES
+Analysis by neighborhood reveals significant equity gaps in service delivery:
+- Back Bay / Beacon Hill: Average resolution time 4.2 days, satisfaction 4.1/5
+- South Boston Waterfront: Average resolution time 5.8 days, satisfaction 3.8/5
+- Roxbury: Average resolution time 12.4 days, satisfaction 2.7/5
+- Mattapan: Average resolution time 14.1 days, satisfaction 2.4/5
+- Dorchester (Fields Corner): Average resolution time 11.8 days, satisfaction 2.9/5
+
+Neighborhoods with median household income below $45,000 experienced average resolution times 2.8x longer than neighborhoods with median income above $100,000. Requests in predominantly non-English-speaking areas had 18% lower resolution rates.
+
+STAFFING & BUDGET
+The 311 call center operates with 42 full-time agents and 15 part-time agents. Average wait time increased from 4.2 minutes to 7.8 minutes. Abandonment rate (callers hanging up) rose to 22%, up from 15%. The FY2025 budget of $4.8 million represented a 3% decrease in inflation-adjusted dollars. The department requested but did not receive funding for an AI-assisted triage system and multilingual chatbot.
+
+LANGUAGE ACCESS
+Requests submitted in languages other than English: Spanish (8.2%), Haitian Creole (4.1%), Chinese (2.8%), Vietnamese (1.9%), Portuguese (1.4%), Cape Verdean Creole (0.9%). Translation services were available for phone requests but not the mobile app or web portal. Non-English requests had a 32% longer average resolution time.
+
+OPEN ISSUES
+As of December 31, 2025: 12,847 open requests older than 30 days. Top categories of overdue requests: Tree Maintenance (4,210), Code Enforcement (3,102), Street Light Outages (2,891), Sidewalk Repair (1,644). The oldest open request dates back to March 2024 (sidewalk repair in Mattapan).
