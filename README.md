@@ -12,6 +12,73 @@
 
 ---
 
+## Quick Start — Get This Running on Your Laptop
+
+Want to follow along during the workshop or use this as a starting point for your hackathon project? You can have everything running in about 10 minutes.
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/holzerjm/civichacks-demo.git
+cd civichacks-demo
+```
+
+### 2. Install Ollama and pull the model
+
+```bash
+# macOS (Homebrew)
+brew install ollama
+
+# Linux
+# curl -fsSL https://ollama.com/install.sh | sh
+
+# Then pull the model (~4.7 GB — use the venue wifi or hotspot)
+ollama pull llama3.1
+```
+
+### 3. Set up Python and install dependencies
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+# .venv\Scripts\activate         # Windows
+
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Run the three demo steps
+
+```bash
+# Step 1 — Local AI in your terminal
+python scripts/demo_step1_ollama.py
+
+# Step 2 — Connect AI to civic data (pick a track: eco, city, edu, justice)
+python scripts/demo_step2_rag.py city
+
+# Step 3 — Launch the web app
+python scripts/demo_step3_app.py
+# Opens at http://localhost:7860
+```
+
+That's it — you now have a working civic AI application. From here you can:
+
+- **Swap the data** — Drop your own `.txt`, `.pdf`, or `.csv` files into `data/` and update the track config in the scripts
+- **Change the model** — Try `ollama pull llama3.2:3b` for something faster, or `ollama pull deepseek-r1:7b` for stronger reasoning
+- **Make it yours** — Fork the repo, change the prompts, add new tracks, build a hackathon project on top of it
+
+Every script supports `--help` for full usage details:
+
+```bash
+python scripts/demo_step1_ollama.py --help
+python scripts/demo_step2_rag.py --help
+python scripts/demo_step3_app.py --help
+```
+
+> **Tip:** If you're at the hackathon and wifi is slow, pair up with someone who already has the model downloaded. Ollama only needs to download once — after that everything runs offline.
+
+---
+
 ## What This Demo Does
 
 This demo builds a **complete civic AI application** live on stage, in three progressive steps, proving that open source AI is free, powerful, and accessible to anyone:
