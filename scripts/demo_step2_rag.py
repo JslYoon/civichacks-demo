@@ -100,15 +100,19 @@ Available tracks:
   edu       📚 EduHack — Boston public schools equity data
   justice   ⚖️  JusticeHack — MA criminal justice reform data
 
+Each track has 3 sample questions (numbered 1-3). By default a random
+question is selected. Use -q to pick a specific one, or --all for all three.
+
 Prerequisites:
   1. Install Ollama        https://ollama.com
   2. Pull the model        ollama pull llama3.1
   3. Install dependencies  pip install -r requirements.txt
 
 Examples:
-  python scripts/demo_step2_rag.py city        # Query CityHack data (1 question)
-  python scripts/demo_step2_rag.py eco --all   # Query EcoHack data (all 3 questions)
-  python scripts/demo_step2_rag.py             # Defaults to city track
+  python scripts/demo_step2_rag.py city          # Random question from CityHack
+  python scripts/demo_step2_rag.py justice 2     # Question 2 from JusticeHack
+  python scripts/demo_step2_rag.py eco --all     # All 3 EcoHack questions
+  python scripts/demo_step2_rag.py               # Random question, city track
         """,
     )
     parser.add_argument(
@@ -119,12 +123,28 @@ Examples:
         help="Hackathon track to query (default: city)",
     )
     parser.add_argument(
+        "question",
+        nargs="?",
+        default=None,
+        type=int,
+        help="Question number to ask (1-3). If omitted, picks a random question.",
+    )
+    parser.add_argument(
         "--all",
         action="store_true",
         dest="all_queries",
-        help="Run all 3 sample questions for the track (default: 1 question)",
+        help="Run all 3 sample questions for the track",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # Validate question number
+    if args.question is not None:
+        if args.question < 1 or args.question > 3:
+            parser.error(f"Question number must be 1-3, got {args.question}")
+        if args.all_queries:
+            parser.error("Cannot use --all with a specific question number")
+
+    return args
 
 def main():
     args = parse_args()
@@ -165,9 +185,22 @@ def main():
     # ── Step D: Query! ─────────────────────────────────────────────
     query_engine = index.as_query_engine(streaming=True, similarity_top_k=3)
 
-    for i, query in enumerate(track["queries"], 1):
+    # Decide which questions to run
+    all_queries = track["queries"]
+    if args.all_queries:
+        selected = list(enumerate(all_queries, 1))
+    elif args.question is not None:
+        idx = args.question - 1
+        selected = [(args.question, all_queries[idx])]
+    else:
+        # Pick a random question so repeated runs feel fresh
+        import random
+        idx = random.randrange(len(all_queries))
+        selected = [(idx + 1, all_queries[idx])]
+
+    for qnum, query in selected:
         print(f"{'─' * 60}")
-        print(f"💬 Question {i}: {query}\n")
+        print(f"💬 Question {qnum}/{len(all_queries)}: {query}\n")
         print("🤖 Answer:\n")
 
         start = time.time()
@@ -177,10 +210,6 @@ def main():
 
         print(f"\n\n⏱️  Answered in {elapsed:.1f}s | Cost: $0.00")
         print()
-
-        # In live demo, you might only do 1 query and take audience questions
-        if not args.all_queries:
-            break
 
     print(f"{'═' * 60}")
     print(f"✅ Real civic data + local AI + zero cost = civic tech prototype")
