@@ -144,13 +144,14 @@ pip install -r requirements.txt
 
 #### 4. Understand the Dependencies
 
-The `requirements.txt` installs four packages:
+The `requirements.txt` installs five packages:
 
 | Package | Purpose |
 |---------|---------|
 | `llama-index>=0.12.0` | Core RAG framework for connecting AI to data |
 | `llama-index-llms-ollama>=0.5.0` | Ollama integration for local LLM inference |
 | `llama-index-embeddings-huggingface>=0.5.0` | Local embedding model (no API key needed) |
+| `llama-index-readers-file>=0.4.0` | File readers for PDF, DOCX, and other formats |
 | `gradio>=5.0.0` | Web UI framework for building the chat interface |
 
 #### 5. Pre-warm Everything (Critical for Live Demos)
@@ -187,6 +188,7 @@ civichacks-demo/
 │   ├── eduhack_boston_schools.txt         # Boston public schools equity data
 │   └── justicehack_ma_justice.txt        # MA criminal justice reform data
 └── scripts/                              # Demo scripts (run in order)
+    ├── cost_estimator.py                 # Shared: local vs. cloud cost comparison
     ├── demo_step1_ollama.py              # Step 1: Basic local AI inference
     ├── demo_step2_rag.py                 # Step 2: RAG with civic data
     └── demo_step3_app.py                 # Step 3: Full Gradio web app
@@ -202,7 +204,7 @@ civichacks-demo/
 
 ### What It Does
 
-The script sends a civic-themed prompt to the local Ollama instance and **streams** the response token by token so the audience watches the AI generate in real time. When done, it prints the elapsed time and "$0.00" cost.
+The script sends a civic-themed prompt to the local Ollama instance and **streams** the response token by token so the audience watches the AI generate in real time. When done, it prints the elapsed time, tokens per second, and a **live cost comparison** — the actual electricity cost versus what the same query would cost on cloud APIs like GPT-4o.
 
 ### The Prompt
 
@@ -211,7 +213,8 @@ The hardcoded prompt asks the model to act as a civic technology advisor and pro
 ### How to Run
 
 ```bash
-python scripts/demo_step1_ollama.py
+python scripts/demo_step1_ollama.py          # Run the demo
+python scripts/demo_step1_ollama.py --help   # Show usage info
 ```
 
 ### Expected Output
@@ -219,9 +222,9 @@ python scripts/demo_step1_ollama.py
 ```
 🏛️  CivicHacks 2026 — Open Source AI, Running Locally
 
-📡 Model: llama3.1 (8B) — running on THIS laptop
-💰 Cost: $0.00
-🔒 Data: never leaves this machine
+📡 Model: llama3.1 (8B) — running on YOUR-HOSTNAME
+🕐 Time: February 21, 2026 at 10:15:23 AM
+🔒 Data: never leaves YOUR-HOSTNAME
 
 ────────────────────────────────────────────────────────────
 
@@ -234,22 +237,27 @@ python scripts/demo_step1_ollama.py
 [Streamed AI response appears here token by token]
 
 ────────────────────────────────────────────────────────────
-⏱️  Generated in 12.3s  |  ~87 words  |  Cost: $0.00
+⏱️  12.3s · 142 tokens · 11 tok/s
+⚡ Local: $0.000009 (0.051 Wh @ 15W) · GPT-4o: $0.0017 (189x more)
 ────────────────────────────────────────────────────────────
 
-✅ That's it. Local AI. Free. Private. Ready to build with.
+✅ That's it. Local AI. Private. And virtually free.
 ```
 
 ### How It Works Internally
 
-1. Imports the `ollama` Python client library
-2. Calls `ollama.chat()` with `stream=True` targeting the `llama3.1` model
-3. Iterates over chunks, printing each token fragment immediately (`flush=True`)
-4. Counts words and tracks elapsed time for the summary line
+1. Imports the `ollama` Python client library and the shared `cost_estimator` module
+2. Displays the live hostname (`platform.node()`) and current timestamp
+3. Calls `ollama.chat()` with `stream=True` targeting the `llama3.1` model
+4. Iterates over chunks, printing each token fragment immediately (`flush=True`)
+5. Extracts token counts from Ollama's final streaming chunk
+6. Calls `format_cost_comparison()` to show local electricity cost vs. cloud API pricing
 
 ### Key Code (simplified)
 
 ```python
+from cost_estimator import format_cost_comparison
+
 stream = ollama.chat(
     model="llama3.1",
     messages=[{"role": "user", "content": PROMPT}],
@@ -257,7 +265,21 @@ stream = ollama.chat(
 )
 for chunk in stream:
     print(chunk["message"]["content"], end="", flush=True)
+
+# After streaming completes:
+cost_line = format_cost_comparison(elapsed, input_tokens, output_tokens)
+print(cost_line)
 ```
+
+### Cost Estimator Module
+
+All three scripts share `scripts/cost_estimator.py`, which provides:
+
+- **`detect_power_watts()`** — Auto-detects hardware wattage (Apple Silicon base/Pro/Max, x86 laptop, desktop GPU, etc.)
+- **`estimate_local_cost(duration, watts)`** — Calculates actual electricity cost: `watts × seconds / 3600 = Wh`, then `Wh × $/kWh`
+- **`estimate_cloud_cost(input_tokens, output_tokens)`** — Looks up published per-token pricing for GPT-4o, Claude 3.5 Sonnet, Gemini 2.5 Flash, and others
+- **`format_cost_comparison()`** — Full one-line format for terminal output
+- **`format_cost_short()`** — Compact format for Gradio chat metadata
 
 ---
 
@@ -286,8 +308,11 @@ for chunk in stream:
 ### How to Run
 
 ```bash
-# Single query (default for live demo)
+# Random question from the city track (default)
 python scripts/demo_step2_rag.py city
+
+# Specific question number (1-3)
+python scripts/demo_step2_rag.py city 2
 
 # All three queries for the track
 python scripts/demo_step2_rag.py eco --all
@@ -295,6 +320,8 @@ python scripts/demo_step2_rag.py eco --all
 # Defaults to "city" if no argument given
 python scripts/demo_step2_rag.py
 ```
+
+Each query displays a cost comparison showing local electricity cost versus cloud API pricing, just like Step 1.
 
 ### Sample Questions per Track
 
@@ -352,10 +379,13 @@ response.print_response_stream()
 ### What It Does
 
 Launches a polished Gradio-based chat interface in the browser with:
+- A **dynamic header** that updates its title and description when you switch tracks
 - A track selector dropdown (switch between all four datasets)
 - A chat interface with message history
-- Pre-built example questions for each track
-- A footer showing the full open source stack and $0.00 cost
+- **Dynamic example questions** that change per track when the selector changes
+- **Per-query cost comparison** (local electricity vs. cloud API) appended to each response
+- Live hostname and timestamp showing the app is running locally
+- A footer showing the full open source stack and privacy note
 - Red Hat-themed styling (red primary color, soft theme)
 
 ### How to Run
@@ -370,44 +400,63 @@ The app starts on `http://localhost:7860` and should open automatically in your 
 
 | Component | Description |
 |-----------|-------------|
-| **Header** | "CivicHacks AI Assistant" with description |
-| **Track Selector** | Dropdown to switch between EcoHack, CityHack, EduHack, JusticeHack |
-| **Chatbot** | Message-style chat with user/assistant bubbles and Red Hat avatar |
+| **Header** | Dynamic — shows "CivicHacks AI Assistant", track name, track description, hostname, and start time. Updates when track changes |
+| **Track Selector** | Dropdown to switch between EcoHack, CityHack, EduHack, JusticeHack — triggers header and example updates |
+| **Chatbot** | Message-style chat with user/assistant bubbles and Red Hat avatar. Each response includes timing and cost comparison |
 | **Question Input** | Text field + "Ask" button (also supports Enter key) |
-| **Example Questions** | Clickable examples that auto-populate the input field |
-| **Footer** | Stack info, model info, cost ($0.00), and privacy note |
+| **Example Questions** | Clickable examples that auto-populate the input field — **update dynamically** when the track changes |
+| **Footer** | Stack info, model info, hostname, privacy note, and per-query cost estimate note |
 
 ### How It Works Internally
 
 1. **Global Index Cache:** Built indices are cached in a `dict` so switching tracks after the first load is instant
 2. **`build_index(track_name)`:** Checks the cache, and if the track hasn't been loaded yet, reads the data file, builds a `VectorStoreIndex`, and caches it
-3. **`query_civic_data(question, track_name, history)`:** Appends the user message to chat history, queries the cached index, appends the AI response (with timing metadata), and returns the updated history
-4. **Gradio Blocks:** The UI is built using `gr.Blocks` with a `Soft` theme, custom CSS, and wired-up event handlers for the submit button and Enter key
+3. **`query_civic_data(question, track_name, history)`:** Appends the user message to chat history, queries the cached index, appends the AI response with timing and cost comparison metadata (via `format_cost_short()`), and returns the updated history
+4. **`build_header_html(track_name)`:** Generates dynamic HTML for the header section with track name, description, hostname, and start time
+5. **`on_track_change(track_name)`:** Called when the track selector changes — returns updated header HTML and a new `gr.Dataset` with track-specific example questions
+6. **Gradio Blocks:** The UI is built using `gr.Blocks` with a `Soft` theme and custom CSS passed to `launch()`. The `track_selector.change()` event wires to `on_track_change()` to dynamically update the header and example questions
 
 ### Key Code (simplified)
 
 ```python
-with gr.Blocks(title="CivicHacks AI Assistant",
-               theme=gr.themes.Soft(primary_hue="red")) as app:
+THEME = gr.themes.Soft(primary_hue="red", secondary_hue="slate")
+CSS = ".header { text-align: center; } .header h1 { color: #CC0000; }"
+
+with gr.Blocks(title="CivicHacks AI Assistant") as app:
+    header = gr.HTML(build_header_html(default_track))
     track_selector = gr.Dropdown(choices=list(TRACKS.keys()), ...)
-    chatbot = gr.Chatbot(type="messages", height=420, ...)
+    chatbot = gr.Chatbot(height=420, ...)
     question_input = gr.Textbox(placeholder="Ask anything...", ...)
     submit_btn = gr.Button("Ask", variant="primary")
+    examples = gr.Examples(examples=..., inputs=[question_input])
 
-    submit_btn.click(fn=query_civic_data,
-                     inputs=[question_input, track_selector, chatbot],
-                     outputs=[chatbot, question_input])
+    submit_btn.click(fn=query_civic_data, ...)
 
-app.launch(server_name="0.0.0.0", server_port=7860)
+    # Dynamic track switching — updates header and example questions
+    track_selector.change(
+        fn=on_track_change,
+        inputs=[track_selector],
+        outputs=[header, examples.dataset],
+    )
+
+app.launch(server_name="0.0.0.0", server_port=7860, theme=THEME, css=CSS)
 ```
 
-### Configuration Options
+> **Note:** Gradio 6.x moved `theme` and `css` parameters from `gr.Blocks()` to `launch()`, and the `Chatbot` component uses messages format by default (the `type` parameter was removed).
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `server_name` | `0.0.0.0` | Bind address (0.0.0.0 = all interfaces) |
-| `server_port` | `7860` | HTTP port for the web UI |
-| `share` | `False` | Set `True` to get a temporary public URL via Gradio's tunneling service |
+### Command-Line Options
+
+```bash
+python scripts/demo_step3_app.py              # Launch on default port 7860
+python scripts/demo_step3_app.py --port 8080  # Launch on custom port
+python scripts/demo_step3_app.py --share      # Get a public URL
+python scripts/demo_step3_app.py --help       # Show all options
+```
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--port` | `7860` | HTTP port for the web UI |
+| `--share` | off | Create a temporary public URL via Gradio's tunneling service |
 
 ---
 
@@ -490,14 +539,20 @@ All four datasets are **synthetic but realistic** — fabricated for demonstrati
 **Step 1 — While the model generates:**
 > "This is the same architecture behind GPT-4. It's generating on this laptop's CPU/GPU. No internet required. No data leaving this machine."
 
+**Step 1 — After it finishes:**
+> "Look at the cost line — fractions of a cent in electricity, versus what you'd pay on GPT-4o. That's the power of local inference."
+
 **Step 2 — While the index builds:**
 > "It's reading the city's data and building a search index. This is the same technique behind every enterprise AI chatbot — except we're doing it locally, for free."
 
 **Step 2 — After the answer:**
 > "It pulled specific numbers from the city's own data. That's RAG — the model retrieves relevant chunks of real data before generating. This is how you build civic tech that's trustworthy."
 
+**Step 3 — Walk through the UI:**
+> "Watch what happens when I switch tracks — the header, description, and example questions all update. Each answer shows you the real cost comparison. This is a production app, built in minutes."
+
 **Step 3 — The kicker:**
-> "Ollama — free. Llama 3.1 — free. LlamaIndex — free. Gradio — free. Total cost: zero dollars. Total time: under an hour."
+> "Ollama — free. Llama 3.1 — free. LlamaIndex — free. Gradio — free. Every query costs fractions of a cent in electricity. That's what open source AI makes possible."
 
 ---
 
@@ -571,10 +626,8 @@ The app runs entirely on `localhost:7860`. No data ever leaves the machine.
 
 ### Temporary Public URL (Gradio Share)
 
-In `demo_step3_app.py`, change:
-
-```python
-app.launch(share=True)
+```bash
+python scripts/demo_step3_app.py --share
 ```
 
 Gradio provides a temporary public URL (valid ~72 hours) via tunneling. Useful for letting judges or remote participants try the app.

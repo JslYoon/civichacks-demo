@@ -189,13 +189,13 @@ python scripts/demo_step3_app.py
 python scripts/demo_step1_ollama.py
 ```
 
-**What happens:** The script sends a civic-themed prompt to the local Ollama instance and streams the response token by token. The audience watches the AI generate in real time. At the end, it prints the time elapsed and "$0.00" cost.
+**What happens:** The script sends a civic-themed prompt to the local Ollama instance and streams the response token by token. The audience watches the AI generate in real time. At the end, it prints the time elapsed, tokens per second, and a **live cost comparison** — showing the actual electricity cost (fractions of a cent) versus what the same query would cost on GPT-4o.
 
 **Talking point while it generates:**
-> "Watch it go — this is the same architecture behind GPT-4. It's generating on this laptop's [CPU/GPU]. No internet required. No data leaving this machine. And it cost me nothing to run."
+> "Watch it go — this is the same architecture behind GPT-4. It's generating on this laptop's [CPU/GPU]. No internet required. No data leaving this machine."
 
 **After it finishes:**
-> "That took [X] seconds. Cost: zero. And that's just the raw model. Over the next 40 minutes, we're going to turn that into a real civic tech application."
+> "That took [X] seconds. Look at the cost line — local electricity cost was a fraction of a cent, versus what you'd pay on a cloud API. And that's just the raw model. Over the next 40 minutes, we're going to turn that into a real civic tech application."
 
 ---
 
@@ -243,18 +243,18 @@ python scripts/demo_step2_rag.py city --all
 python scripts/demo_step3_app.py
 ```
 
-**What happens:** Gradio launches a web server and opens a polished chat interface in the browser. It has track selection, example questions, a chat interface, and a footer showing the full stack. The audience sees a real, shareable web application.
+**What happens:** Gradio launches a web server and opens a polished chat interface in the browser. It has track selection, a dynamic header that updates per track, example questions that change when you switch tracks, a chat interface with per-query cost comparisons, and a footer showing the full stack. The audience sees a real, shareable web application.
 
 **Walk through the UI:**
-1. Point out the track selector — switch between datasets
-2. Click an example question — watch it query and respond
-3. Highlight the footer: "Ollama + LlamaIndex + Gradio · Cost: $0.00"
+1. Point out the track selector — switch between datasets and watch the header and example questions update dynamically
+2. Click an example question — watch it query and respond with a live cost comparison in each answer
+3. Highlight the footer: "Ollama + LlamaIndex + Gradio · per-query cost estimate shown in each response"
 
 **Talking point:**
-> "This is a production-quality web interface built with Gradio. The entire UI is about 40 lines of Python. No React, no JavaScript, no frontend experience needed. And if you want to share it with judges or deploy it publicly, Hugging Face Spaces will host it for free."
+> "This is a production-quality web interface built with Gradio. The entire UI is about 40 lines of Python. No React, no JavaScript, no frontend experience needed. And notice — when you switch tracks, the header, description, and example questions all update dynamically. And if you want to share it with judges or deploy it publicly, Hugging Face Spaces will host it for free."
 
 **The kicker:**
-> "Let's count what we used: Ollama — free. Llama 3.1 — free, open source. LlamaIndex — free, open source. Gradio — free, open source. Hosting — free. Total cost to build a civic AI application: zero dollars. Total time from scratch: under an hour. That's what open source AI makes possible."
+> "Let's count what we used: Ollama — free. Llama 3.1 — free, open source. LlamaIndex — free, open source. Gradio — free, open source. Hosting — free. Every query shows you the real cost — fractions of a cent in electricity versus dollars on cloud APIs. That's what open source AI makes possible."
 
 ---
 
@@ -339,9 +339,10 @@ civichacks-demo/
 │   ├── eduhack_boston_schools.txt
 │   └── justicehack_ma_justice.txt
 └── scripts/               ← Demo scripts (run in order)
-    ├── demo_step1_ollama.py    ← Step 1: Basic local AI
-    ├── demo_step2_rag.py       ← Step 2: RAG with civic data
-    └── demo_step3_app.py       ← Step 3: Full web application
+    ├── cost_estimator.py        ← Shared: local vs. cloud cost comparison
+    ├── demo_step1_ollama.py     ← Step 1: Basic local AI
+    ├── demo_step2_rag.py        ← Step 2: RAG with civic data
+    └── demo_step3_app.py        ← Step 3: Full web application
 ```
 
 ---
