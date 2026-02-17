@@ -17,11 +17,26 @@ PREREQUISITES:
 """
 
 import argparse
+import os
 import platform
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
+
+# Suppress harmless "embeddings.position_ids UNEXPECTED" warning and noisy
+# progress bars from HuggingFace model loader (keeps demo output clean)
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+os.environ.setdefault("TQDM_DISABLE", "1")
+os.environ.setdefault("HF_HUB_DISABLE_IMPLICIT_TOKEN", "1")
+os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+os.environ.setdefault("HF_HUB_VERBOSITY", "error")
+
+import logging
+import warnings
+logging.getLogger("httpx").setLevel(logging.WARNING)
+warnings.filterwarnings("ignore", message=".*unauthenticated.*HF Hub.*")
 
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.llms.ollama import Ollama
