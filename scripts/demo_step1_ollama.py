@@ -15,6 +15,7 @@ PREREQUISITE: Ollama installed and model pulled
   $ ollama pull llama3.1
 """
 
+import argparse
 import ollama
 import platform
 import sys
@@ -27,7 +28,32 @@ explain why open source AI matters for building tools that serve
 communities — especially for students at a hackathon who want to
 make a real impact this weekend."""
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="CivicHacks 2026 — Step 1: The 60-Second AI",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+What this script does:
+  Sends a civic-themed prompt to a local Llama 3.1 model via Ollama
+  and streams the response token by token. Displays the hostname,
+  timestamp, elapsed time, and $0.00 cost — proving that powerful AI
+  runs locally for free.
+
+Prerequisites:
+  1. Install Ollama        https://ollama.com
+  2. Pull the model        ollama pull llama3.1
+  3. Start Ollama          ollama serve
+
+Examples:
+  python scripts/demo_step1_ollama.py          # Run the demo
+  python scripts/demo_step1_ollama.py --help   # Show this help
+        """,
+    )
+    return parser.parse_args()
+
 def main():
+    parse_args()
+
     hostname = platform.node()
     now = datetime.now().strftime("%B %d, %Y at %I:%M:%S %p")
 

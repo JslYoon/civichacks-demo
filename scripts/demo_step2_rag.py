@@ -16,6 +16,7 @@ PREREQUISITES:
   $ pip install llama-index llama-index-llms-ollama llama-index-embeddings-huggingface
 """
 
+import argparse
 import platform
 import sys
 import time
@@ -67,14 +68,53 @@ TRACKS = {
     },
 }
 
-def main():
-    # ── Parse track from command line ──────────────────────────────
-    track_key = sys.argv[1] if len(sys.argv) > 1 else "city"
-    if track_key not in TRACKS:
-        print(f"Usage: python demo_step2_rag.py [{'|'.join(TRACKS.keys())}]")
-        sys.exit(1)
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="CivicHacks 2026 — Step 2: Connecting AI to Real Civic Data (RAG)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+What this script does:
+  Loads a track-specific civic dataset, builds a vector search index,
+  and queries it using a local Llama 3.1 model via Ollama. The AI
+  response is grounded in actual data — citing real statistics and
+  findings from the documents (Retrieval Augmented Generation).
 
-    track = TRACKS[track_key]
+Available tracks:
+  eco       🌿 EcoHack — Boston environmental quality data
+  city      🏙️  CityHack — Boston 311 service request data (default)
+  edu       📚 EduHack — Boston public schools equity data
+  justice   ⚖️  JusticeHack — MA criminal justice reform data
+
+Prerequisites:
+  1. Install Ollama        https://ollama.com
+  2. Pull the model        ollama pull llama3.1
+  3. Install dependencies  pip install -r requirements.txt
+
+Examples:
+  python scripts/demo_step2_rag.py city        # Query CityHack data (1 question)
+  python scripts/demo_step2_rag.py eco --all   # Query EcoHack data (all 3 questions)
+  python scripts/demo_step2_rag.py             # Defaults to city track
+        """,
+    )
+    parser.add_argument(
+        "track",
+        nargs="?",
+        default="city",
+        choices=list(TRACKS.keys()),
+        help="Hackathon track to query (default: city)",
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        dest="all_queries",
+        help="Run all 3 sample questions for the track (default: 1 question)",
+    )
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    track = TRACKS[args.track]
     data_dir = Path(__file__).parent.parent / "data"
     data_file = data_dir / track["file"]
 
@@ -124,7 +164,7 @@ def main():
         print()
 
         # In live demo, you might only do 1 query and take audience questions
-        if "--all" not in sys.argv:
+        if not args.all_queries:
             break
 
     print(f"{'═' * 60}")

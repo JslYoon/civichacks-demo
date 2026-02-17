@@ -16,6 +16,7 @@ PREREQUISITES:
   $ pip install llama-index llama-index-llms-ollama llama-index-embeddings-huggingface gradio
 """
 
+import argparse
 import gradio as gr
 import platform
 import time
@@ -101,6 +102,50 @@ def update_examples(track_name):
     """Update example questions when track changes."""
     examples = EXAMPLE_QUESTIONS.get(track_name, [])
     return gr.update(samples=[[q] for q in examples])
+
+# ── Parse arguments ───────────────────────────────────────────────
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="CivicHacks 2026 — Step 3: Civic AI Web Application",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+What this script does:
+  Launches a Gradio web application that lets users select a hackathon
+  track and ask questions about Boston & Massachusetts civic data. The
+  app uses RAG (Retrieval Augmented Generation) with a local Llama 3.1
+  model via Ollama — no cloud, no API keys, no cost.
+
+Features:
+  - Track selector dropdown (EcoHack, CityHack, EduHack, JusticeHack)
+  - Chat interface with message history
+  - Pre-built example questions per track
+  - Live hostname and timestamp in the UI
+
+Prerequisites:
+  1. Install Ollama        https://ollama.com
+  2. Pull the model        ollama pull llama3.1
+  3. Install dependencies  pip install -r requirements.txt
+
+Examples:
+  python scripts/demo_step3_app.py              # Launch on port 7860
+  python scripts/demo_step3_app.py --port 8080  # Launch on custom port
+  python scripts/demo_step3_app.py --share      # Get a public URL
+        """,
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=7860,
+        help="Port to run the web server on (default: 7860)",
+    )
+    parser.add_argument(
+        "--share",
+        action="store_true",
+        help="Create a public URL via Gradio's tunneling service",
+    )
+    return parser.parse_args()
+
+args = parse_args()
 
 # ── Machine identity (shown in UI so audience knows it's live & local) ──
 HOSTNAME = platform.node()
@@ -198,6 +243,6 @@ with gr.Blocks(
 if __name__ == "__main__":
     app.launch(
         server_name="0.0.0.0",
-        server_port=7860,
-        share=False,  # Set True to get a public URL for sharing
+        server_port=args.port,
+        share=args.share,
     )
