@@ -64,6 +64,10 @@ python scripts/demo_step3_app.py
 python scripts/demo_step4_byod.py                          # auto-discover from userdata/
 python scripts/demo_step4_byod.py --all                    # load ALL files in userdata/
 python scripts/demo_step4_byod.py path/to/your/file.txt    # use a specific file
+
+# Step 5 — BYOD as a web app (upload files in the browser)
+python scripts/demo_step5_byod_app.py
+# Opens at http://localhost:7861
 ```
 
 That's it — you now have a working civic AI application. From here you can:
@@ -79,6 +83,7 @@ python scripts/demo_step1_ollama.py --help
 python scripts/demo_step2_rag.py --help
 python scripts/demo_step3_app.py --help
 python scripts/demo_step4_byod.py --help
+python scripts/demo_step5_byod_app.py --help
 ```
 
 > **Tip:** If you're at the hackathon and wifi is slow, pair up with someone who already has the model downloaded. Ollama only needs to download once — after that everything runs offline.
@@ -95,6 +100,7 @@ This demo builds a **complete civic AI application** live on stage, in three pro
 | **Step 2** | Connect it to real civic data (RAG) | ~90 seconds | "It can analyze our city's data" |
 | **Step 3** | Wrap it in a web app | ~60 seconds | "That's a real product — built in minutes" |
 | **Step 4** | Bring Your Own Data | ~3-5 minutes | "Now plug in YOUR data and start asking questions" |
+| **Step 5** | BYOD Web App | ~2 minutes | "Now your BYOD tool is a shareable web app too" |
 
 The demo uses **real Boston and Massachusetts civic datasets** covering all four hackathon tracks (EcoHack, CityHack, EduHack, JusticeHack). The audience votes on which track to demo, creating investment and ownership.
 
@@ -291,6 +297,26 @@ python scripts/demo_step4_byod.py ~/Downloads/my_report.pdf
 
 ---
 
+### STEP 5: "BYOD — Now as a Web App" (Optional Follow-up)
+
+**Setup:** Show the audience that the BYOD experience also works as a polished web app with drag-and-drop file upload.
+
+**Script:**
+> "We showed you BYOD in the terminal. But what if you want to share that with your team, or let someone non-technical use it? Same idea — one command, and it's a web app."
+
+**Run:**
+```bash
+python scripts/demo_step5_byod_app.py
+# Opens at http://localhost:7861
+```
+
+**What happens:** A Gradio web interface opens with drag-and-drop file upload, a userdata/ file selector, and an AI chat. Upload any file (or select from userdata/), get an AI summary, and ask questions — all in the browser. Supports loading multiple files into one index for cross-file exploration.
+
+**Talking point:**
+> "Same BYOD capability, now shareable. Upload files, get a summary, ask questions — all in the browser. And it runs on a different port, so you can have both the civic data app and the BYOD app running at the same time."
+
+---
+
 ## Troubleshooting
 
 ### "Ollama isn't responding"
@@ -377,7 +403,8 @@ civichacks-demo/
     ├── demo_step1_ollama.py     ← Step 1: Basic local AI
     ├── demo_step2_rag.py        ← Step 2: RAG with civic data
     ├── demo_step3_app.py        ← Step 3: Full web application
-    └── demo_step4_byod.py       ← Step 4: Bring Your Own Data (interactive)
+    ├── demo_step4_byod.py       ← Step 4: Bring Your Own Data (interactive)
+    └── demo_step5_byod_app.py   ← Step 5: BYOD Web Application
 ```
 
 ---

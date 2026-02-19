@@ -16,13 +16,14 @@
 6. [Step 2 — RAG with Civic Data](#step-2--rag-with-civic-data)
 7. [Step 3 — Gradio Web Application](#step-3--gradio-web-application)
 8. [Step 4 — Bring Your Own Data](#step-4--bring-your-own-data)
-9. [Civic Datasets Reference](#civic-datasets-reference)
-10. [Live Demo Presenter Guide](#live-demo-presenter-guide)
-11. [Customization & Adaptation](#customization--adaptation)
-12. [Deployment Options](#deployment-options)
-13. [Troubleshooting](#troubleshooting)
-14. [Resources & Further Reading](#resources--further-reading)
-15. [License](#license)
+9. [Step 5 — BYOD Web Application](#step-5--byod-web-application)
+10. [Civic Datasets Reference](#civic-datasets-reference)
+11. [Live Demo Presenter Guide](#live-demo-presenter-guide)
+12. [Customization & Adaptation](#customization--adaptation)
+13. [Deployment Options](#deployment-options)
+14. [Troubleshooting](#troubleshooting)
+15. [Resources & Further Reading](#resources--further-reading)
+16. [License](#license)
 
 ---
 
@@ -38,6 +39,7 @@ This project is a live-demo toolkit that builds a **complete civic AI applicatio
 | Step 2 | ~90 sec | "It can analyze our city's data" |
 | Step 3 | ~60 sec | "That's a real product — built in minutes" |
 | Step 4 | ~3-5 min | "Now plug in YOUR data and start asking questions" |
+| Step 5 | ~2 min | "Now your BYOD tool is a shareable web app too" |
 
 The demo uses **synthetic but realistic Boston and Massachusetts civic datasets** covering four hackathon tracks: EcoHack (environment), CityHack (311 services), EduHack (public schools), and JusticeHack (criminal justice). The audience votes on which track to demo live, creating engagement and ownership.
 
@@ -195,7 +197,8 @@ civichacks-demo/
     ├── demo_step1_ollama.py              # Step 1: Basic local AI inference
     ├── demo_step2_rag.py                 # Step 2: RAG with civic data
     ├── demo_step3_app.py                 # Step 3: Full Gradio web app
-    └── demo_step4_byod.py               # Step 4: Bring Your Own Data (interactive)
+    ├── demo_step4_byod.py               # Step 4: Bring Your Own Data (interactive)
+    └── demo_step5_byod_app.py           # Step 5: BYOD Web Application (Gradio)
 ```
 
 ---
@@ -615,6 +618,72 @@ The `--all` mode builds one unified vector index across all files, enabling cros
 
 ---
 
+## Step 5 — BYOD Web Application
+
+**File:** `scripts/demo_step5_byod_app.py`
+**Purpose:** Wrap the BYOD experience in a Gradio web UI with drag-and-drop file upload
+**Duration:** ~2 minutes on stage (just run it, browser opens)
+
+### What It Does
+
+A Gradio web application that provides the same BYOD functionality as Step 4, but in a polished browser interface:
+1. **Drag-and-drop file upload** or select files from `userdata/` directory
+2. Supports loading a **single file** or **multiple files at once** for cross-file exploration
+3. Displays file analysis metadata (name, type, size, word count) in the UI
+4. Generates an **AI summary** shown as the first chat message
+5. **Interactive Q&A chat** — ask questions and get AI answers grounded in your data
+6. Shows cost comparison (local electricity vs. cloud API) on every response
+
+### How to Run
+
+```bash
+# Launch the web app (opens at http://localhost:7861)
+python scripts/demo_step5_byod_app.py
+
+# Custom port
+python scripts/demo_step5_byod_app.py --port 8080
+
+# Use a different model
+python scripts/demo_step5_byod_app.py --model phi3:mini
+
+# Create a public URL for sharing
+python scripts/demo_step5_byod_app.py --share
+
+# Show usage info
+python scripts/demo_step5_byod_app.py --help
+```
+
+### UI Components
+
+| Component | Description |
+|-----------|-------------|
+| **Header** | Dynamic — shows "CivicHacks BYOD AI Assistant", loaded file names, hostname, and start time. Updates when files are loaded |
+| **File Upload Tab** | Drag-and-drop area for uploading `.txt`, `.pdf`, `.csv`, `.docx` files. Supports multiple files. "Load & Analyze" button |
+| **userdata/ Tab** | Checkbox list of files in `userdata/` directory. "Load Selected", "Load ALL", and "Refresh" buttons |
+| **File Analysis** | Markdown display showing metadata for each loaded file (type, size, modified date, word count) |
+| **Chatbot** | Message-style chat. First message is the AI summary. Subsequent messages show Q&A with cost comparison |
+| **Question Input** | Text field + "Ask" button (also supports Enter key) |
+| **Footer** | Stack info, model info, hostname, privacy note |
+
+### How It Works Internally
+
+1. **`find_userdata_files()`** scans the `userdata/` directory for supported file types
+2. **`validate_uploaded_file()`** validates file path, extension, and size (returns error tuple instead of exiting)
+3. **`analyze_file_metadata()`** returns markdown string with file metadata for display
+4. **`load_and_index_files()`** loads documents via `SimpleDirectoryReader`, builds the vector index, generates AI summary — with `gr.Progress()` for visual feedback
+5. **`query_byod_data()`** queries the index and appends the response with cost metadata to chat history
+6. **`gr.State`** stores the per-session index and loaded file list, supporting multiple concurrent browser sessions
+
+### Command-Line Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--port` | `7861` | HTTP port for the web UI (different from Step 3's 7860) |
+| `--model` | `llama3.1` | Ollama model to use |
+| `--share` | off | Create a temporary public URL via Gradio's tunneling service |
+
+---
+
 ## Civic Datasets Reference
 
 All four datasets are **synthetic but realistic** — fabricated for demonstration purposes using real-world patterns. They live in the `data/` directory as plain `.txt` files.
@@ -681,6 +750,7 @@ All four datasets are **synthetic but realistic** — fabricated for demonstrati
 | ~Minute 20 | Step 2 | Run `demo_step2_rag.py <track>` — show RAG with real data |
 | ~Minute 32 | Step 3 | Run `demo_step3_app.py` — reveal the web app |
 | ~Minute 40 | Step 4 | Run `demo_step4_byod.py` — attendee brings their own data |
+| ~Minute 45 | Step 5 | Run `demo_step5_byod_app.py` — BYOD as a web app |
 
 ### Before Going on Stage
 
@@ -712,6 +782,9 @@ All four datasets are **synthetic but realistic** — fabricated for demonstrati
 
 **Step 4 — Bring Your Own Data:**
 > "You've seen what our civic data can do. But what about YOUR data? Got a PDF, a spreadsheet, a text file? Drop it in and start asking questions — no code changes, no configuration. That's the whole point of open source AI — you're not limited to what we prepared."
+
+**Step 5 — BYOD Web App:**
+> "Same BYOD capability, now as a shareable web app. Drag and drop files in the browser, get a summary, ask questions — and you can share it with your whole team."
 
 ---
 
