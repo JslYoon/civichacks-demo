@@ -13,6 +13,10 @@ build/
 # HuggingFace cache (large model files)
 .cache/
 
+# User data (attendees drop files here for Step 4 BYOD)
+userdata/*
+!userdata/.gitkeep
+
 # OS files
 .DS_Store
 Thumbs.db

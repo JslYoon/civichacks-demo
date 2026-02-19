@@ -53,6 +53,8 @@ FILE_TYPE_NAMES = {
     ".docx": "Word document",
 }
 
+USERDATA_DIR = Path(__file__).parent.parent / "userdata"
+
 SUMMARY_PROMPT = (
     "You are analyzing a document that was just loaded. "
     "Provide a concise summary covering: "
@@ -61,6 +63,17 @@ SUMMARY_PROMPT = (
     "3) Three questions someone might want to ask about this data. "
     "Keep it under 200 words."
 )
+
+
+def find_userdata_files():
+    """Scan the userdata/ directory for supported files."""
+    if not USERDATA_DIR.is_dir():
+        return []
+    files = [
+        f for f in sorted(USERDATA_DIR.iterdir())
+        if f.is_file() and f.suffix.lower() in SUPPORTED_EXTENSIONS
+    ]
+    return files
 
 
 def parse_args():
@@ -85,11 +98,15 @@ Prerequisites:
   2. Pull the model        ollama pull llama3.1
   3. Install dependencies  pip install -r requirements.txt
 
+Auto-discovery:
+  Drop files into the userdata/ directory before running. The script
+  will find them automatically. If multiple files are found, you pick
+  one. If no files are found, you'll be prompted for a path.
+
 Examples:
-  python scripts/demo_step4_byod.py myfile.txt
+  python scripts/demo_step4_byod.py                              # auto-discover from userdata/
+  python scripts/demo_step4_byod.py myfile.txt                   # use a specific file
   python scripts/demo_step4_byod.py ~/Documents/report.pdf
-  python scripts/demo_step4_byod.py data/cityhack_boston_311.txt
-  python scripts/demo_step4_byod.py                              # prompted for file path
   python scripts/demo_step4_byod.py myfile.txt --model phi3:mini # use a different model
         """,
     )
@@ -296,16 +313,39 @@ def main():
     if args.file:
         filepath = validate_file(args.file)
     else:
-        print("  No file specified. Drag a file into the terminal or type a path:\n")
-        try:
-            raw = input("  File path >> ").strip().strip("'\"")
-        except (EOFError, KeyboardInterrupt):
-            print("\n")
-            sys.exit(0)
-        if not raw:
-            print("\n  No file provided. Exiting.\n")
-            sys.exit(0)
-        filepath = validate_file(raw)
+        # Auto-discover files in userdata/
+        found = find_userdata_files()
+        if len(found) == 1:
+            filepath = found[0]
+            print(f"  📂 Found in userdata/: {filepath.name}\n")
+        elif len(found) > 1:
+            print(f"  📂 Found {len(found)} files in userdata/:\n")
+            for i, f in enumerate(found, 1):
+                size = format_file_size(f.stat().st_size)
+                print(f"    {i}. {f.name}  ({size})")
+            print()
+            try:
+                choice = input(f"  Select a file (1-{len(found)}) >> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\n")
+                sys.exit(0)
+            if not choice.isdigit() or int(choice) < 1 or int(choice) > len(found):
+                print(f"\n  ❌ Invalid selection. Please enter 1-{len(found)}.\n")
+                sys.exit(1)
+            filepath = found[int(choice) - 1]
+        else:
+            # No files in userdata/ — prompt for a path
+            print(f"  📂 No files found in userdata/")
+            print(f"     Drop a file into the userdata/ directory, or type a path:\n")
+            try:
+                raw = input("  File path >> ").strip().strip("'\"")
+            except (EOFError, KeyboardInterrupt):
+                print("\n")
+                sys.exit(0)
+            if not raw:
+                print("\n  No file provided. Exiting.\n")
+                sys.exit(0)
+            filepath = validate_file(raw)
 
     # ── Step B: Configure local AI stack ──────────────────────────
     print(f"\n⚙️  Configuring local AI stack...")
