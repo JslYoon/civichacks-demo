@@ -189,6 +189,7 @@ civichacks-demo/
 │   ├── cityhack_boston_311.txt            # Boston 311 service request data
 │   ├── eduhack_boston_schools.txt         # Boston public schools equity data
 │   └── justicehack_ma_justice.txt        # MA criminal justice reform data
+├── userdata/                             # Drop your own files here for Step 4
 └── scripts/                              # Demo scripts (run in order)
     ├── cost_estimator.py                 # Shared: local vs. cloud cost comparison
     ├── demo_step1_ollama.py              # Step 1: Basic local AI inference
@@ -472,23 +473,27 @@ python scripts/demo_step3_app.py --help       # Show all options
 ### What It Does
 
 An interactive terminal-based script that:
-1. Accepts any data file (`.txt`, `.pdf`, `.csv`, `.docx`) — via CLI argument or drag-and-drop prompt
-2. Analyzes the file (type, size, word count, content preview)
-3. Builds a vector index and generates an AI summary of the contents
-4. Enters an interactive Q&A loop where the user types questions and gets AI answers grounded in their data
-5. Shows cost comparison (local electricity vs. cloud API) on every query
+1. **Auto-discovers** files in the `userdata/` directory, or accepts a file path as a CLI argument
+2. Supports loading a **single file** or **all files at once** (`--all`) for cross-file exploration
+3. Analyzes each file (type, size, word count, content preview)
+4. Builds a vector index and generates an AI summary of the contents
+5. Enters an interactive Q&A loop where the user types questions and gets AI answers grounded in their data
+6. Shows cost comparison (local electricity vs. cloud API) on every query
 
 ### How to Run
 
 ```bash
-# With a file path
+# Auto-discover files in userdata/ (prompts to select if multiple found)
+python scripts/demo_step4_byod.py
+
+# Load ALL files in userdata/ into one index (cross-file exploration)
+python scripts/demo_step4_byod.py --all
+
+# With a specific file path
 python scripts/demo_step4_byod.py path/to/your/file.txt
 
 # With a PDF
 python scripts/demo_step4_byod.py ~/Downloads/report.pdf
-
-# Interactive prompt (drag and drop a file into the terminal)
-python scripts/demo_step4_byod.py
 
 # Use a different model
 python scripts/demo_step4_byod.py myfile.txt --model phi3:mini
@@ -496,6 +501,19 @@ python scripts/demo_step4_byod.py myfile.txt --model phi3:mini
 # Show usage info
 python scripts/demo_step4_byod.py --help
 ```
+
+### userdata/ Auto-Discovery
+
+Drop files into the `userdata/` directory before running the script. The auto-discovery logic works as follows:
+
+| Files in userdata/ | Behavior |
+|---------------------|----------|
+| 0 files | Prompts for a file path |
+| 1 file | Automatically uses that file |
+| 2+ files | Shows a numbered list to pick from (or type `a` to load all) |
+| `--all` flag | Loads every file into a single combined index |
+
+The `--all` mode builds one unified vector index across all files, enabling cross-document questions like "Compare the findings across these reports" or "What themes are common across all the data?"
 
 ### Supported File Types
 
@@ -578,18 +596,21 @@ python scripts/demo_step4_byod.py --help
 
 ### How It Works Internally
 
-1. **`validate_file()`** resolves the path, checks extension and file size, handles drag-and-drop quote stripping
-2. **`analyze_file()`** loads the file via `SimpleDirectoryReader`, prints metadata and a content preview
-3. **`VectorStoreIndex.from_documents()`** builds the in-memory vector index (same as Steps 2 & 3)
-4. **`generate_summary()`** queries the index with a summary prompt and streams the AI response
-5. **`interactive_loop()`** runs the Q&A loop — each question is an independent RAG query with cost comparison
-6. Ctrl+C is caught cleanly (no Python traceback during live demos)
+1. **`find_userdata_files()`** scans the `userdata/` directory for supported file types
+2. **`validate_file()`** resolves the path, checks extension and file size, handles drag-and-drop quote stripping
+3. **`analyze_file()`** loads a single file via `SimpleDirectoryReader`, prints metadata and a content preview
+4. **`analyze_all_files()`** loads multiple files, prints per-file status, skips unreadable files gracefully, and combines all documents
+5. **`VectorStoreIndex.from_documents()`** builds the in-memory vector index (same as Steps 2 & 3)
+6. **`generate_summary()`** queries the index with a summary prompt (single-file or multi-file variant) and streams the AI response
+7. **`interactive_loop()`** runs the Q&A loop — each question is an independent RAG query with cost comparison
+8. Ctrl+C is caught cleanly (no Python traceback during live demos)
 
 ### Command-Line Options
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `file` | *(prompted)* | Path to data file (positional, optional) |
+| `file` | *(auto-discover)* | Path to data file (positional, optional) |
+| `--all` | off | Load ALL files in userdata/ into a single index for cross-file exploration |
 | `--model` | `llama3.1` | Ollama model to use (lets attendees try different models) |
 
 ---

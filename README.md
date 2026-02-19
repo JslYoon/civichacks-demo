@@ -61,12 +61,14 @@ python scripts/demo_step3_app.py
 # Opens at http://localhost:7860
 
 # Step 4 — Bring Your Own Data (interactive Q&A with any file)
-python scripts/demo_step4_byod.py path/to/your/file.txt
+python scripts/demo_step4_byod.py                          # auto-discover from userdata/
+python scripts/demo_step4_byod.py --all                    # load ALL files in userdata/
+python scripts/demo_step4_byod.py path/to/your/file.txt    # use a specific file
 ```
 
 That's it — you now have a working civic AI application. From here you can:
 
-- **Swap the data** — Drop your own `.txt`, `.pdf`, or `.csv` files into `data/` and update the track config in the scripts
+- **Swap the data** — Drop your own `.txt`, `.pdf`, or `.csv` files into `userdata/` and run Step 4 (or update the track config in `data/` for Steps 2-3)
 - **Change the model** — Try `ollama pull llama3.2:3b` for something faster, or `ollama pull deepseek-r1:7b` for stronger reasoning
 - **Make it yours** — Fork the repo, change the prompts, add new tracks, build a hackathon project on top of it
 
@@ -272,14 +274,17 @@ python scripts/demo_step3_app.py
 
 **Run:**
 ```bash
-# With a file path
-python scripts/demo_step4_byod.py ~/Downloads/my_report.pdf
-
-# Or let it prompt interactively (drag and drop a file into the terminal)
+# Auto-discover files from userdata/ directory
 python scripts/demo_step4_byod.py
+
+# Load ALL files in userdata/ into one index (cross-file exploration)
+python scripts/demo_step4_byod.py --all
+
+# Or specify a file directly
+python scripts/demo_step4_byod.py ~/Downloads/my_report.pdf
 ```
 
-**What happens:** The script analyzes the file (type, size, content preview), builds a vector index, generates an AI summary of the contents, and then enters an interactive Q&A loop. The attendee types questions and gets AI answers grounded in their actual data — with cost comparison on every query.
+**What happens:** The script auto-discovers files in the `userdata/` directory (or accepts a file path). It analyzes the file(s), builds a vector index, generates an AI summary, and enters an interactive Q&A loop. With `--all`, multiple files are loaded into a single index for cross-file exploration. Every query includes a cost comparison.
 
 **Talking point:**
 > "That's the whole point of open source AI — you're not limited to what we prepared. Any data, any question, running on your laptop. Now imagine what you could build this weekend."
@@ -366,6 +371,7 @@ civichacks-demo/
 │   ├── cityhack_boston_311.txt
 │   ├── eduhack_boston_schools.txt
 │   └── justicehack_ma_justice.txt
+├── userdata/              ← Drop your own files here for Step 4
 └── scripts/               ← Demo scripts (run in order)
     ├── cost_estimator.py        ← Shared: local vs. cloud cost comparison
     ├── demo_step1_ollama.py     ← Step 1: Basic local AI

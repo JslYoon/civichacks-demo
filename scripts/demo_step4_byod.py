@@ -64,6 +64,15 @@ SUMMARY_PROMPT = (
     "Keep it under 200 words."
 )
 
+MULTI_SUMMARY_PROMPT = (
+    "You are analyzing a collection of documents that were just loaded together. "
+    "Provide a concise summary covering: "
+    "1) What these documents are about — identify common themes or the overall scope, "
+    "2) Key data points or findings across the documents (cite specific numbers if present), "
+    "3) Three questions someone might want to ask that span multiple documents. "
+    "Keep it under 250 words."
+)
+
 
 def find_userdata_files():
     """Scan the userdata/ directory for supported files."""
@@ -103,8 +112,12 @@ Auto-discovery:
   will find them automatically. If multiple files are found, you pick
   one. If no files are found, you'll be prompted for a path.
 
+  Use --all to load ALL files in userdata/ into a single index and
+  explore across all your data at once.
+
 Examples:
   python scripts/demo_step4_byod.py                              # auto-discover from userdata/
+  python scripts/demo_step4_byod.py --all                        # load all files in userdata/
   python scripts/demo_step4_byod.py myfile.txt                   # use a specific file
   python scripts/demo_step4_byod.py ~/Documents/report.pdf
   python scripts/demo_step4_byod.py myfile.txt --model phi3:mini # use a different model
@@ -115,6 +128,12 @@ Examples:
         nargs="?",
         default=None,
         help="Path to your data file (.txt, .pdf, .csv, .docx). If omitted, you will be prompted.",
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        dest="load_all",
+        help="Load ALL files in userdata/ into a single index for cross-file exploration",
     )
     parser.add_argument(
         "--model",
@@ -211,21 +230,64 @@ def analyze_file(filepath):
     return documents
 
 
-def generate_summary(query_engine, filepath_name):
-    """Generate an AI summary of the loaded data."""
+def analyze_all_files(filepaths):
+    """Print metadata for multiple files and load all documents."""
     print(f"{'─' * 60}")
-    print(f"  🤖 AI Summary of: {filepath_name}")
+    print(f"  📂 Loading {len(filepaths)} files from userdata/")
+    print(f"{'─' * 60}\n")
+
+    all_documents = []
+    total_size = 0
+
+    for filepath in filepaths:
+        ext = filepath.suffix.lower()
+        file_type = FILE_TYPE_NAMES.get(ext, ext)
+        size = filepath.stat().st_size
+        total_size += size
+
+        print(f"   📄 {filepath.name}  ({format_file_size(size)}, {file_type})")
+
+        try:
+            docs = SimpleDirectoryReader(input_files=[str(filepath)]).load_data()
+            if docs and any(len(d.text.strip()) > 0 for d in docs):
+                all_documents.extend(docs)
+            else:
+                print(f"      ⚠️  No text extracted — skipping")
+        except Exception as e:
+            print(f"      ⚠️  Could not read: {e} — skipping")
+
+    if not all_documents:
+        print("\n  ❌ Could not extract text from any file.\n")
+        sys.exit(1)
+
+    total_chars = sum(len(d.text) for d in all_documents)
+    total_words = sum(len(d.text.split()) for d in all_documents)
+
+    print(f"\n   {'─' * 50}")
+    print(f"   Total:     {len(all_documents)} document(s), {total_chars:,} characters, ~{total_words:,} words")
+    print(f"   Combined:  {format_file_size(total_size)}")
+    print(f"{'─' * 60}\n")
+
+    return all_documents
+
+
+def generate_summary(query_engine, label, prompt=None):
+    """Generate an AI summary of the loaded data."""
+    prompt = prompt or SUMMARY_PROMPT
+
+    print(f"{'─' * 60}")
+    print(f"  🤖 AI Summary of: {label}")
     print(f"{'─' * 60}\n")
 
     start = time.time()
-    response = query_engine.query(SUMMARY_PROMPT)
+    response = query_engine.query(prompt)
     response.print_response_stream()
     elapsed = time.time() - start
 
     # Estimate tokens (~1.3 tokens per word for English)
     response_text = str(response)
     est_output_tokens = int(len(response_text.split()) * 1.3)
-    est_input_tokens = int(len(SUMMARY_PROMPT.split()) * 1.3) + 200
+    est_input_tokens = int(len(prompt.split()) * 1.3) + 200
 
     cost_line = format_cost_comparison(elapsed, est_input_tokens, est_output_tokens)
     print(f"\n\n⏱️  {elapsed:.1f}s · ~{est_output_tokens} tokens")
@@ -233,7 +295,7 @@ def generate_summary(query_engine, filepath_name):
     print()
 
 
-def interactive_loop(query_engine, filepath_name, hostname):
+def interactive_loop(query_engine, label, hostname, summary_prompt=None):
     """Interactive Q&A loop — ask questions about your data."""
     print(f"{'═' * 60}")
     print(f"  💬 Interactive Q&A — Ask anything about your data")
@@ -265,7 +327,7 @@ def interactive_loop(query_engine, filepath_name, hostname):
             print()
             continue
         elif cmd == "summary":
-            generate_summary(query_engine, filepath_name)
+            generate_summary(query_engine, label, prompt=summary_prompt)
             continue
 
         # Regular question
@@ -309,9 +371,21 @@ def main():
     print(f"  🏛️  CIVICHACKS 2026 — Bring Your Own Data")
     print(f"{'═' * 60}\n")
 
-    # ── Step A: Get the file path ─────────────────────────────────
+    # ── Step A: Determine mode — single file, all files, or interactive ──
+    load_all = args.load_all
+    filepaths = None  # used in --all mode
+    filepath = None   # used in single-file mode
+
     if args.file:
         filepath = validate_file(args.file)
+    elif load_all:
+        # --all flag: load everything in userdata/
+        found = find_userdata_files()
+        if not found:
+            print(f"  ❌ No supported files found in userdata/")
+            print(f"     Drop .txt, .pdf, .csv, or .docx files there first.\n")
+            sys.exit(1)
+        filepaths = found
     else:
         # Auto-discover files in userdata/
         found = find_userdata_files()
@@ -323,16 +397,21 @@ def main():
             for i, f in enumerate(found, 1):
                 size = format_file_size(f.stat().st_size)
                 print(f"    {i}. {f.name}  ({size})")
+            print(f"    a. Load ALL files (explore across all data)")
             print()
             try:
-                choice = input(f"  Select a file (1-{len(found)}) >> ").strip()
+                choice = input(f"  Select a file (1-{len(found)}) or 'a' for all >> ").strip()
             except (EOFError, KeyboardInterrupt):
                 print("\n")
                 sys.exit(0)
-            if not choice.isdigit() or int(choice) < 1 or int(choice) > len(found):
-                print(f"\n  ❌ Invalid selection. Please enter 1-{len(found)}.\n")
+            if choice.lower() == "a":
+                load_all = True
+                filepaths = found
+            elif choice.isdigit() and 1 <= int(choice) <= len(found):
+                filepath = found[int(choice) - 1]
+            else:
+                print(f"\n  ❌ Invalid selection. Please enter 1-{len(found)} or 'a'.\n")
                 sys.exit(1)
-            filepath = found[int(choice) - 1]
         else:
             # No files in userdata/ — prompt for a path
             print(f"  📂 No files found in userdata/")
@@ -357,8 +436,15 @@ def main():
     Settings.llm = Ollama(model=args.model, request_timeout=120.0)
     Settings.embed_model = HuggingFaceEmbedding(model_name="all-MiniLM-L6-v2")
 
-    # ── Step C: Analyze and load the file ─────────────────────────
-    documents = analyze_file(filepath)
+    # ── Step C: Analyze and load file(s) ──────────────────────────
+    if load_all:
+        documents = analyze_all_files(filepaths)
+        label = f"{len(filepaths)} files from userdata/"
+        summary_prompt = MULTI_SUMMARY_PROMPT
+    else:
+        documents = analyze_file(filepath)
+        label = filepath.name
+        summary_prompt = SUMMARY_PROMPT
 
     # ── Step D: Build the vector index ────────────────────────────
     print("🔍 Building vector index (this is the 'RAG' magic)...")
@@ -370,10 +456,10 @@ def main():
     query_engine = index.as_query_engine(streaming=True, similarity_top_k=3)
 
     # ── Step E: Generate AI summary ───────────────────────────────
-    generate_summary(query_engine, filepath.name)
+    generate_summary(query_engine, label, prompt=summary_prompt)
 
     # ── Step F: Interactive Q&A ───────────────────────────────────
-    interactive_loop(query_engine, filepath.name, hostname)
+    interactive_loop(query_engine, label, hostname, summary_prompt=summary_prompt)
 
 
 if __name__ == "__main__":
