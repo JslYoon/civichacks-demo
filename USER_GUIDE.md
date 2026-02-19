@@ -113,16 +113,24 @@ Download the installer from https://ollama.com
 
 ```bash
 # Downloads ~4.7 GB — use reliable wifi
+# All platforms (macOS / Linux / Windows):
 ollama pull llama3.1
 ```
 
-Verify it works:
+Verify it works (all platforms):
 ```bash
 ollama run llama3.1 "Say hello in 10 words or less"
 ```
 
 If Ollama isn't running as a background service, start it first:
 ```bash
+# macOS / Linux:
+ollama serve
+
+# Windows:
+# Ollama typically runs as a service automatically.
+# Check the system tray for the Ollama icon.
+# If needed, start from the Start menu or run:
 ollama serve
 ```
 
@@ -156,7 +164,7 @@ The `requirements.txt` installs five packages:
 
 #### 5. Pre-warm Everything (Critical for Live Demos)
 
-First runs are slower because models need to load into memory and the embedding model (~80 MB) downloads on first use. Run each step once before presenting:
+First runs are slower because models need to load into memory and the embedding model (~80 MB) downloads on first use. Run each step once before presenting (all platforms):
 
 ```bash
 # Pre-warm Step 1
@@ -168,7 +176,7 @@ python scripts/demo_step2_rag.py city
 python scripts/demo_step2_rag.py edu
 python scripts/demo_step2_rag.py justice
 
-# Pre-warm Step 3 (start it, verify it loads, then Ctrl+C)
+# Pre-warm Step 3 (start it, verify it loads, then stop with Ctrl+C)
 python scripts/demo_step3_app.py
 ```
 
@@ -307,6 +315,8 @@ All three scripts share `scripts/cost_estimator.py`, which provides:
 
 ### How to Run
 
+All platforms (macOS / Linux / Windows):
+
 ```bash
 # Random question from the city track (default)
 python scripts/demo_step2_rag.py city
@@ -390,6 +400,8 @@ Launches a polished Gradio-based chat interface in the browser with:
 
 ### How to Run
 
+All platforms (macOS / Linux / Windows):
+
 ```bash
 python scripts/demo_step3_app.py
 ```
@@ -445,6 +457,8 @@ app.launch(server_name="0.0.0.0", server_port=7860, theme=THEME, css=CSS)
 > **Note:** Gradio 6.x moved `theme` and `css` parameters from `gr.Blocks()` to `launch()`, and the `Chatbot` component uses messages format by default (the `type` parameter was removed).
 
 ### Command-Line Options
+
+All platforms (macOS / Linux / Windows):
 
 ```bash
 python scripts/demo_step3_app.py              # Launch on default port 7860
@@ -528,11 +542,13 @@ All four datasets are **synthetic but realistic** — fabricated for demonstrati
 
 ### Before Going on Stage
 
-1. Ensure Ollama is running (`ollama list` should show `llama3.1`)
+1. Ensure Ollama is running (run `ollama list` — should show `llama3.1`)
 2. Run all pre-warm commands (see [Prerequisites](#prerequisites--installation))
-3. Set terminal font size large enough for the back row
+3. Set terminal/command prompt font size large enough for the back row
 4. Close unnecessary applications to free memory
 5. Have a backup screen recording ready in case of hardware failure
+
+**Note:** All demo commands (`python scripts/...`) work identically on macOS, Linux, and Windows.
 
 ### Talking Points by Step
 
@@ -573,6 +589,8 @@ Replace or add files in the `data/` directory. The RAG pipeline supports:
 After adding new files, update the `TRACKS` dictionaries in `demo_step2_rag.py` and `demo_step3_app.py` to reference them.
 
 ### Change the Model
+
+All platforms (macOS / Linux / Windows):
 
 ```bash
 # Smaller / faster (for limited hardware)
@@ -626,6 +644,8 @@ The app runs entirely on `localhost:7860`. No data ever leaves the machine.
 
 ### Temporary Public URL (Gradio Share)
 
+All platforms (macOS / Linux / Windows):
+
 ```bash
 python scripts/demo_step3_app.py --share
 ```
@@ -669,7 +689,9 @@ Convert `demo_step3_app.py` to use Streamlit instead of Gradio. Streamlit Cloud 
 |---------|----------|
 | Browser doesn't open | Navigate manually to `http://localhost:7860` |
 | Port already in use | Kill the existing process or change `server_port` in the script |
-| Specific browser needed | Set env var: `BROWSER=chrome python scripts/demo_step3_app.py` |
+| Specific browser needed (macOS/Linux) | Set env var: `BROWSER=chrome python scripts/demo_step3_app.py` |
+| Specific browser needed (Windows CMD) | `set BROWSER=chrome` then `python scripts/demo_step3_app.py` |
+| Specific browser needed (Windows PowerShell) | `$env:BROWSER="chrome"` then `python scripts/demo_step3_app.py` |
 
 ### Embedding Model Issues
 

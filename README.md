@@ -1,20 +1,24 @@
 # CivicHacks 2026 — Open Source AI Live Demo
 
-## Step-by-Step Guide
-
 **Workshop:** *Why Open Source AI Changes Everything — And How to Use It This Weekend*
 
 **Event:** CivicHacks 2026 · Boston University · February 21–22, 2026
 
-**Presenter:** Jan Mark Holzer, Distinguished Engineer, Red Hat
-
-**Presenter:** Lucas Yoon, Senior Software Engineer, Red Hat
+**Presenters:** Jan Mark Holzer & Lucas Yoon, Red Hat
 
 ---
 
-## Quick Start — Get This Running on Your Laptop
+## Quick Start
 
-Want to follow along during the workshop or use this as a starting point for your hackathon project? You can have everything running in about 10 minutes.
+**For Workshop Participants:** [Jump to Exercises →](exercises/README.md)
+
+**For Workshop Presenters:** [Presenter Guide →](USER_GUIDE.md)
+
+---
+
+## Quick Start for Participants
+
+Get everything running in about 10 minutes.
 
 ### 1. Clone the repo
 
@@ -30,9 +34,13 @@ cd civichacks-demo
 brew install ollama
 
 # Linux
-# curl -fsSL https://ollama.com/install.sh | sh
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows
+# Download installer from https://ollama.com
 
 # Then pull the model (~4.7 GB — use the venue wifi or hotspot)
+# All platforms (macOS / Linux / Windows):
 ollama pull llama3.1
 ```
 
@@ -47,32 +55,57 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Run the three demo steps
+### 4. Complete the Four Exercises
+
+The workshop consists of **four hands-on exercises** that build on each other:
+
+**Exercise 1: Run AI Locally** (15 minutes)
+```bash
+cd exercises/exercise1
+python local_ai.py
+```
+Learn how to run powerful AI models on your laptop with zero cost.
+[View Instructions →](exercises/exercise1/README.md)
+
+**Exercise 2: Connect AI to Data** (30 minutes)
+```bash
+cd exercises/exercise2
+python civic_rag.py city
+```
+Learn how to make AI answer questions about YOUR city's data using RAG.
+[View Instructions →](exercises/exercise2/README.md)
+
+**Exercise 3: Build a Web App** (30 minutes)
+```bash
+cd exercises/exercise3
+python web_app.py
+```
+Learn how to turn your AI into a shareable web application.
+[View Instructions →](exercises/exercise3/README.md)
+
+**Exercise 4: Apply Your Skills** (20 minutes)
+```bash
+cd exercises/exercise4
+# Read the README.md for the challenge
+```
+Apply everything you learned in a quick creative challenge.
+[View Instructions →](exercises/exercise4/README.md)
+
+Each exercise has detailed instructions with learning objectives and step-by-step guidance.
+
+### Alternative: Run the Original Demo Scripts
+
+If you want to run the presenter-style demos directly:
 
 ```bash
-# Step 1 — Local AI in your terminal
+# Demo Step 1 — Local AI in your terminal
 python scripts/demo_step1_ollama.py
 
-# Step 2 — Connect AI to civic data (pick a track: eco, city, edu, justice)
+# Demo Step 2 — Connect AI to civic data
 python scripts/demo_step2_rag.py city
 
-# Step 3 — Launch the web app
+# Demo Step 3 — Launch the web app
 python scripts/demo_step3_app.py
-# Opens at http://localhost:7860
-```
-
-That's it — you now have a working civic AI application. From here you can:
-
-- **Swap the data** — Drop your own `.txt`, `.pdf`, or `.csv` files into `data/` and update the track config in the scripts
-- **Change the model** — Try `ollama pull llama3.2:3b` for something faster, or `ollama pull deepseek-r1:7b` for stronger reasoning
-- **Make it yours** — Fork the repo, change the prompts, add new tracks, build a hackathon project on top of it
-
-Every script supports `--help` for full usage details:
-
-```bash
-python scripts/demo_step1_ollama.py --help
-python scripts/demo_step2_rag.py --help
-python scripts/demo_step3_app.py --help
 ```
 
 > **Tip:** If you're at the hackathon and wifi is slow, pair up with someone who already has the model downloaded. Ollama only needs to download once — after that everything runs offline.
@@ -81,7 +114,24 @@ python scripts/demo_step3_app.py --help
 
 ## What This Demo Does
 
-This demo builds a **complete civic AI application** live on stage, in three progressive steps, proving that open source AI is free, powerful, and accessible to anyone:
+This repository contains both a **live workshop demo** and **hands-on exercises** for hackathon participants.
+
+### For Participants: Four Progressive Exercises
+
+Learn by doing through four hands-on exercises:
+
+| Exercise | What You Build | What You Learn | Time |
+|----------|----------------|----------------|------|
+| **Exercise 1** | Run AI locally | How to run GPT-class models on your laptop for free | 15 min |
+| **Exercise 2** | Connect AI to civic data | How to make AI answer questions about YOUR city (RAG) | 30 min |
+| **Exercise 3** | Build a web app | How to create shareable interfaces judges will love | 30 min |
+| **Exercise 4** | Your own project | Apply everything to build civic tech that matters | Rest of hackathon! |
+
+Each exercise has **detailed instructions, learning objectives, and challenges** in its own README.
+
+### For Presenters: Live Demo Flow
+
+The demo builds a **complete civic AI application** live on stage in three steps:
 
 | Step | What Happens | Time on Stage | Audience Sees |
 |------|-------------|---------------|---------------|
@@ -120,12 +170,14 @@ Download the installer from [ollama.com](https://ollama.com)
 ollama pull llama3.1
 ```
 
-Verify it works:
+Verify it works (all platforms):
 ```bash
 ollama run llama3.1 "Say hello in 10 words or less"
 ```
 
 ### 3. Install Python Dependencies
+
+All platforms (macOS / Linux / Windows):
 
 ```bash
 # Requires Python 3.10+
@@ -146,6 +198,8 @@ Run each step once before you go on stage. This ensures:
 - Embedding model is downloaded and cached
 - No surprise downloads during the live demo
 
+All platforms (macOS / Linux / Windows):
+
 ```bash
 # Pre-warm Step 1
 python scripts/demo_step1_ollama.py
@@ -154,7 +208,7 @@ python scripts/demo_step1_ollama.py
 python scripts/demo_step2_rag.py eco
 python scripts/demo_step2_rag.py city
 python scripts/demo_step2_rag.py edu
-python scripts/demo_step3_app.py justice
+python scripts/demo_step2_rag.py justice
 
 # Pre-warm Step 3 (start it, verify it loads, then Ctrl+C)
 python scripts/demo_step3_app.py
@@ -184,7 +238,7 @@ python scripts/demo_step3_app.py
 **Script:**
 > "I just told you that GPT-4-class models are free and open. Let me prove it. This laptop has no special hardware. I'm going to ask a local AI model — Llama 3.1, running right here, no cloud, no API key — a question about civic tech."
 
-**Run:**
+**Run (all platforms):**
 ```bash
 python scripts/demo_step1_ollama.py
 ```
@@ -208,11 +262,17 @@ python scripts/demo_step1_ollama.py
 
 *Optionally show the code file briefly (the key lines are well-commented):*
 ```bash
-# Show the relevant code if you want — it's intentionally readable
+# macOS / Linux:
 cat scripts/demo_step2_rag.py | head -80
+
+# Windows PowerShell:
+Get-Content scripts/demo_step2_rag.py | Select-Object -First 80
+
+# Windows CMD:
+more scripts/demo_step2_rag.py
 ```
 
-**Run (using the audience's voted track):**
+**Run (using the audience's voted track, all platforms):**
 ```bash
 # If they voted CityHack:
 python scripts/demo_step2_rag.py city
@@ -238,7 +298,7 @@ python scripts/demo_step2_rag.py city --all
 **Script:**
 > "We've got a local AI that can answer questions about civic data. But hackathon judges aren't going to lean over your shoulder and watch a terminal. You need a demo. Watch how fast we can go from script to web app."
 
-**Run:**
+**Run (all platforms):**
 ```bash
 python scripts/demo_step3_app.py
 ```
@@ -262,9 +322,16 @@ python scripts/demo_step3_app.py
 
 ### "Ollama isn't responding"
 ```bash
-# Check if Ollama is running
+# Check if Ollama is running (all platforms)
 ollama list
-# If not, start it
+
+# If not, start it:
+# macOS / Linux:
+ollama serve
+
+# Windows:
+# Ollama typically runs as a service. Check if it's running in the system tray.
+# If not, restart it from the Start menu or run:
 ollama serve
 ```
 
@@ -278,9 +345,18 @@ The HuggingFace embedding model (`all-MiniLM-L6-v2`) downloads on first use (~80
 
 ### "Gradio won't open in the browser"
 ```bash
-# Try specifying the browser
+# macOS / Linux:
 BROWSER=chrome python scripts/demo_step3_app.py
-# Or open manually: http://localhost:7860
+
+# Windows CMD:
+set BROWSER=chrome
+python scripts/demo_step3_app.py
+
+# Windows PowerShell:
+$env:BROWSER="chrome"
+python scripts/demo_step3_app.py
+
+# Or open manually in any browser: http://localhost:7860
 ```
 
 ### Backup Plan: Pre-Recorded Demo
@@ -299,6 +375,9 @@ Replace the files in `data/` with any text documents relevant to your use case. 
 - Web pages (use `SimpleWebPageReader`)
 
 ### Change the Model
+
+All platforms (macOS / Linux / Windows):
+
 ```bash
 # Smaller/faster model for limited hardware
 ollama pull phi3:mini          # 3.8B, runs on almost anything
@@ -331,18 +410,33 @@ Convert `demo_step3_app.py` to use Streamlit instead of Gradio — both are exce
 
 ```
 civichacks-demo/
-├── README.md              ← You are here
-├── requirements.txt       ← Python dependencies
-├── data/                  ← Civic datasets (one per track)
+├── README.md                    ← You are here
+├── USER_GUIDE.md                ← Comprehensive guide for presenters
+├── requirements.txt             ← Python dependencies
+├── data/                        ← Civic datasets (one per track)
 │   ├── ecohack_boston_environment.txt
 │   ├── cityhack_boston_311.txt
 │   ├── eduhack_boston_schools.txt
 │   └── justicehack_ma_justice.txt
-└── scripts/               ← Demo scripts (run in order)
-    ├── cost_estimator.py        ← Shared: local vs. cloud cost comparison
-    ├── demo_step1_ollama.py     ← Step 1: Basic local AI
-    ├── demo_step2_rag.py        ← Step 2: RAG with civic data
-    └── demo_step3_app.py        ← Step 3: Full web application
+├── exercises/                   ← Hands-on learning exercises
+│   ├── exercise1/               ← Run AI locally
+│   │   ├── README.md           ← Exercise instructions
+│   │   └── local_ai.py         ← Run your first AI model
+│   ├── exercise2/               ← Connect AI to civic data (RAG)
+│   │   ├── README.md
+│   │   └── civic_rag.py
+│   ├── exercise3/               ← Build a web application
+│   │   ├── README.md
+│   │   └── web_app.py
+│   ├── exercise4/               ← Final challenge: build your own!
+│   │   └── README.md
+│   └── shared/                  ← Shared utilities
+│       └── cost_estimator.py   ← Cost comparison logic
+└── scripts/                     ← Original presenter demo scripts
+    ├── cost_estimator.py
+    ├── demo_step1_ollama.py
+    ├── demo_step2_rag.py
+    └── demo_step3_app.py
 ```
 
 ---

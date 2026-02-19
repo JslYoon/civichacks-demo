@@ -1,19 +1,28 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
-║  CIVICHACKS 2026 — LIVE DEMO STEP 2                        ║
-║  "Connecting AI to Real Civic Data"                         ║
-║                                                              ║
-║  Proves: In ~15 lines of code, you can query real civic     ║
-║  documents with a local AI — no APIs, no cost               ║
-║  Time on stage: ~90 seconds (code is pre-written, just run) ║
+║  CIVICHACKS 2026 — EXERCISE 2: Connect AI to Data (RAG)    ║
+║  "Make AI Answer Questions About Your City's Data"          ║
 ╚══════════════════════════════════════════════════════════════╝
 
-Run this during the Stack Evaluation segment (0:15-0:28).
-The audience sees their voted track's data get loaded and queried.
+WHAT YOU'LL LEARN:
+  ✓ What RAG (Retrieval Augmented Generation) means
+  ✓ How to connect AI to real documents (not just generic knowledge)
+  ✓ How to build a searchable knowledge base from civic data
+
+WHY THIS MATTERS:
+  Generic AI models don't know about YOUR community's specific data.
+  RAG lets you teach AI about:
+  - Your city's 311 service requests
+  - Environmental data from your neighborhood
+  - School performance metrics
+  - Justice system statistics
+
+  This makes AI actually useful for civic tech — it can cite real
+  facts from real documents, not just make educated guesses.
 
 PREREQUISITES:
   $ ollama pull llama3.1
-  $ pip install llama-index llama-index-llms-ollama llama-index-embeddings-huggingface
+  $ pip install -r requirements.txt
 """
 
 import argparse
@@ -41,6 +50,9 @@ warnings.filterwarnings("ignore", message=".*unauthenticated.*HF Hub.*")
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+
+# Add shared directory to path for cost_estimator import
+sys.path.insert(0, str(Path(__file__).parent.parent / "shared"))
 from cost_estimator import format_cost_comparison
 
 # ── Track configuration ────────────────────────────────────────────
@@ -151,7 +163,7 @@ def main():
     args = parse_args()
 
     track = TRACKS[args.track]
-    data_dir = Path(__file__).parent.parent / "data"
+    data_dir = Path(__file__).parent.parent.parent / "data"
     data_file = data_dir / track["file"]
 
     hostname = platform.node()

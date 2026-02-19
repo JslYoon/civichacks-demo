@@ -1,19 +1,26 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
-║  CIVICHACKS 2026 — LIVE DEMO STEP 3                        ║
-║  "From Script to Web App in 5 Lines of UI Code"            ║
-║                                                              ║
-║  Proves: Wrapping your AI in a shareable web interface      ║
-║  takes minutes, not days                                    ║
-║  Time on stage: ~60 seconds (just run it, browser opens)    ║
+║  CIVICHACKS 2026 — EXERCISE 3: Build a Web App             ║
+║  "Turn Your AI into a Real, Shareable Application"          ║
 ╚══════════════════════════════════════════════════════════════╝
 
-Run this during the Templates & Resources segment (0:28-0:38).
-The audience watches a terminal script become a real web app.
+WHAT YOU'LL LEARN:
+  ✓ How to build a web interface for AI (no JavaScript needed!)
+  ✓ How to make your project demo-ready for judges
+  ✓ How to deploy applications that anyone can use
+
+WHY THIS MATTERS:
+  Hackathon judges don't lean over your shoulder to see terminal output.
+  You need a real interface. This exercise shows you how to:
+  - Build a polished chat interface in ~40 lines of Python
+  - Make it shareable with a public URL
+  - Deploy it for free
+
+  Web apps turn weekend projects into real tools people can actually use.
 
 PREREQUISITES:
   $ ollama pull llama3.1
-  $ pip install llama-index llama-index-llms-ollama llama-index-embeddings-huggingface gradio
+  $ pip install -r requirements.txt
 """
 
 import argparse
@@ -41,10 +48,14 @@ warnings.filterwarnings("ignore", message=".*unauthenticated.*HF Hub.*")
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+import sys
+
+# Add shared directory to path for cost_estimator import
+sys.path.insert(0, str(Path(__file__).parent.parent / "shared"))
 from cost_estimator import format_cost_short
 
 # ── Data files for each track ──────────────────────────────────────
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
 TRACKS = {
     "🌿 EcoHack — Boston Environment": "ecohack_boston_environment.txt",

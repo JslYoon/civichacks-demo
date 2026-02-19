@@ -1,17 +1,23 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
-║  CIVICHACKS 2026 — LIVE DEMO STEP 1                        ║
-║  "The 60-Second AI"                                         ║
-║                                                              ║
-║  Proves: You can run a GPT-4-class model locally, for free  ║
-║  Time on stage: ~60 seconds                                 ║
+║  CIVICHACKS 2026 — EXERCISE 1: Local AI                    ║
+║  "Run AI on Your Laptop — No Cloud, No API Key"            ║
 ╚══════════════════════════════════════════════════════════════╝
 
-Run this during the opening segment (0:00-0:05) right after
-the DeepSeek R1 story. The audience sees a local model respond
-in real time — no API key, no cloud, no cost.
+WHAT YOU'LL LEARN:
+  ✓ How to run powerful AI models locally (no internet needed)
+  ✓ Why local AI is private, free, and powerful
+  ✓ How to interact with AI using Python
 
-PREREQUISITE: Ollama installed and model pulled
+WHY THIS MATTERS:
+  Open source AI means you can build real applications without:
+  - Paying per API call
+  - Sending data to the cloud
+  - Needing an internet connection after setup
+
+  This is the foundation for civic tech that's accessible to everyone.
+
+PREREQUISITE:
   $ ollama pull llama3.1
 """
 
@@ -21,6 +27,10 @@ import platform
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
+
+# Add shared directory to path for cost_estimator import
+sys.path.insert(0, str(Path(__file__).parent.parent / "shared"))
 from cost_estimator import format_cost_comparison
 
 # ── A civic-flavored prompt to make the demo relevant ──────────────
@@ -31,23 +41,21 @@ make a real impact this weekend."""
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="CivicHacks 2026 — Step 1: The 60-Second AI",
+        description="CivicHacks 2026 — Exercise 1: Local AI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 What this script does:
   Sends a civic-themed prompt to a local Llama 3.1 model via Ollama
-  and streams the response token by token. Displays the hostname,
-  timestamp, elapsed time, and $0.00 cost — proving that powerful AI
-  runs locally for free.
+  and streams the response token by token. Shows you real-time AI
+  generation with zero cost.
 
 Prerequisites:
   1. Install Ollama        https://ollama.com
   2. Pull the model        ollama pull llama3.1
-  3. Start Ollama          ollama serve
 
 Examples:
-  python scripts/demo_step1_ollama.py          # Run the demo
-  python scripts/demo_step1_ollama.py --help   # Show this help
+  python local_ai.py          # Run the exercise
+  python local_ai.py --help   # Show this help
         """,
     )
     return parser.parse_args()
