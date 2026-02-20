@@ -60,10 +60,10 @@ brew install ollama
 # Linux
 curl -fsSL https://ollama.com/install.sh | sh
 
-**Windows:**
+# Windows
 # Download the installer from [ollama.com](https://ollama.com)
 
-# Then pull the model (~4.7 GB — use the venue wifi or hotspot)
+# Then pull the model (~4.7 GB — use the venue wifi)
 ollama pull llama3.1
 ```
 
@@ -72,7 +72,7 @@ ollama pull llama3.1
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows
+.venv\Scripts\activate           # Windows
 
 pip install --upgrade pip
 pip install -r requirements.txt
