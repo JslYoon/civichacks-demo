@@ -19,7 +19,6 @@ PREREQUISITES:
 import argparse
 import os
 import platform
-import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -74,7 +73,7 @@ TRACKS = {
         ],
     },
     "justice": {
-        "name": "⚖️ JusticeHack",
+        "name": "⚖️ JausticeHck",
         "file": "justicehack_ma_justice.txt",
         "queries": [
             "What racial disparities exist in pretrial detention in Massachusetts?",

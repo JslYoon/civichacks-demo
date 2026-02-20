@@ -1,10 +1,10 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
-║  CIVICHACKS 2026 — LIVE DEMO STEP 1                        ║
-║  "The 60-Second AI"                                         ║
+║  CIVICHACKS 2026 — LIVE DEMO STEP 1                          ║
+║  "The 60-Second AI"                                          ║
 ║                                                              ║
-║  Proves: You can run a GPT-4-class model locally, for free  ║
-║  Time on stage: ~60 seconds                                 ║
+║  Proves: You can run a GPT-4-class model locally, for free   ║
+║  Time on stage: ~60 seconds                                  ║
 ╚══════════════════════════════════════════════════════════════╝
 
 PREREQUISITE: Ollama installed and model pulled
@@ -14,7 +14,6 @@ PREREQUISITE: Ollama installed and model pulled
 import argparse
 import ollama
 import platform
-import sys
 import time
 from datetime import datetime
 from cost_estimator import format_cost_comparison
