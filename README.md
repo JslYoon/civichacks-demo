@@ -391,6 +391,8 @@ Convert `demo_step3_app.py` to use Streamlit instead of Gradio — both are exce
 ```
 civichacks-demo/
 ├── README.md              ← You are here
+├── RESOURCES.md           ← Tools, frameworks & hackathon cheat sheet
+├── USER_GUIDE.md          ← Comprehensive presenter & developer guide
 ├── requirements.txt       ← Python dependencies
 ├── data/                  ← Civic datasets (one per track)
 │   ├── ecohack_boston_environment.txt
@@ -423,6 +425,8 @@ civichacks-demo/
 | CrewAI | crewai.com | Multi-agent framework |
 | awesome-langchain | github.com/kyrolabs/awesome-langchain | Curated tool list |
 | awesome-llm-agents | github.com/kaushikb11/awesome-llm-agents | Agent framework list |
+
+> **Looking for more?** See the full **[Resource Cheat Sheet](RESOURCES.md)** — a comprehensive guide to tools, frameworks, data sources, deployment options, and hackathon tips.
 
 ---
 

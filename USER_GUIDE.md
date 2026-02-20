@@ -938,6 +938,8 @@ If hardware or wifi fails during a live demo, have a pre-recorded screen capture
 | Massachusetts | https://mass.gov/open-data | State open data |
 | Federal | https://data.gov | US federal open data |
 
+> **Full Resource Cheat Sheet:** For a comprehensive list of tools, frameworks, models, vector databases, agent frameworks, deployment platforms, and hackathon tips, see **[RESOURCES.md](RESOURCES.md)**.
+
 ---
 
 ## License
