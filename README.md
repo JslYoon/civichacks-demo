@@ -8,7 +8,9 @@
 
 **Presenter:** Jan Mark Holzer, Distinguished Engineer, Red Hat
 
-**Presenter:** Lucas Yoon, Senior Software Engineer, Red Hat
+**Presenter:** Wiolliam Caban, Principal Product Manager, GenAI, Red Hat
+
+**Presenter:** Lucas Yoon, Senior Software Engineer, Decelopeer Hub, Red Hat
 
 ---
 
