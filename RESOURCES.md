@@ -83,8 +83,9 @@ RAG (Retrieval Augmented Generation) is the technique we used in the demo — th
 | **Haystack** | Search-focused RAG, great for document Q&A | [haystack.deepset.ai](https://haystack.deepset.ai) |
 | **DSPy** | Programmatic prompting, academic-grade optimization | [dspy.ai](https://dspy.ai) |
 | **RAGFlow** | Visual RAG pipeline builder with built-in UI | [github.com/infiniflow/ragflow](https://github.com/infiniflow/ragflow) |
+| **Docling** | Document parsing for RAG — converts PDF, DOCX, PPTX, HTML, images to Markdown/JSON | [docling.ai](https://www.docling.ai) |
 
-> **Our recommendation:** Stick with **LlamaIndex** for this hackathon — it's what the demo uses, so you can build on top of the existing code without starting from scratch.
+> **Our recommendation:** Stick with **LlamaIndex** for this hackathon — it's what the demo uses, so you can build on top of the existing code without starting from scratch. Pair it with **Docling** if you need to parse complex PDFs, PowerPoints, or scanned documents.
 
 ---
 
@@ -211,6 +212,7 @@ These are the most common libraries you'll want to `pip install` during the hack
 | **pypdf** | Read and extract text from PDFs | `pip install pypdf` |
 | **python-docx** | Read and write Word documents | `pip install python-docx` |
 | **openpyxl** | Read and write Excel files | `pip install openpyxl` |
+| **docling** | Advanced document parsing (PDF, DOCX, PPTX, HTML, images) — RAG-optimized with layout understanding and OCR | `pip install docling` |
 | **beautifulsoup4** | Parse HTML and scrape web pages | `pip install beautifulsoup4` |
 
 ### APIs & Web
